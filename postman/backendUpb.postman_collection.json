@@ -1,0 +1,113 @@
+{
+  "info": {
+    "name": "backendUpb - Productos",
+    "description": "CRUD de productos (Express + PostgreSQL).\n\nLa URL predeterminada apunta al backend local. Si no hay DATABASE_URL, el modo local guarda los datos en .local-data/productos.json.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "description": "Local: backend en tu PC" },
+    { "key": "productionUrl", "value": "https://backendupbtest.onrender.com", "description": "Producción (Render), si está disponible" },
+    { "key": "id", "value": "1", "description": "Se actualiza automáticamente al crear un producto" }
+  ],
+  "item": [
+    {
+      "name": "Health check",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] }
+      }
+    },
+    {
+      "name": "Estado de la API",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/health", "host": ["{{baseUrl}}"], "path": ["api", "health"] }
+      }
+    },
+    {
+      "name": "Listar productos",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/productos", "host": ["{{baseUrl}}"], "path": ["api", "productos"] }
+      }
+    },
+    {
+      "name": "Buscar productos por nombre",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/productos?nombre=prueba",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "productos"],
+          "query": [{ "key": "nombre", "value": "prueba", "description": "Texto a buscar (no distingue mayúsculas)" }]
+        }
+      }
+    },
+    {
+      "name": "Crear producto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    pm.collectionVariables.set('id', pm.response.json().id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nombre\": \"Laptop\",\n    \"precio\": 1500,\n    \"stock\": 5\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/productos", "host": ["{{baseUrl}}"], "path": ["api", "productos"] }
+      }
+    },
+    {
+      "name": "Obtener producto por id",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/productos/{{id}}", "host": ["{{baseUrl}}"], "path": ["api", "productos", "{{id}}"] }
+      }
+    },
+    {
+      "name": "Actualizar producto",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"precio\": 1350,\n    \"stock\": 10\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/productos/{{id}}", "host": ["{{baseUrl}}"], "path": ["api", "productos", "{{id}}"] }
+      }
+    },
+    {
+      "name": "Eliminar producto",
+      "request": {
+        "method": "DELETE",
+        "url": { "raw": "{{baseUrl}}/api/productos/{{id}}", "host": ["{{baseUrl}}"], "path": ["api", "productos", "{{id}}"] }
+      }
+    },
+    {
+      "name": "Crear producto inválido (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"precio\": -10\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/productos", "host": ["{{baseUrl}}"], "path": ["api", "productos"] }
+      }
+    }
+  ]
+}
