@@ -1,12 +1,12 @@
 {
   "info": {
     "name": "backendUpb - Productos",
-    "description": "CRUD de productos (Express + PostgreSQL).\n\nLa URL predeterminada apunta al backend local. Si no hay DATABASE_URL, el modo local guarda los datos en .local-data/productos.json.",
+    "description": "CRUD de productos e inventario (Express + PostgreSQL).\n\nLa URL predeterminada apunta a Render. Usa localUrl para probar el backend en tu PC.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:3000", "description": "Local: backend en tu PC" },
-    { "key": "productionUrl", "value": "https://backendupbtest.onrender.com", "description": "Producción (Render), si está disponible" },
+    { "key": "baseUrl", "value": "https://backendupbtest.onrender.com", "description": "Producción (Render)" },
+    { "key": "localUrl", "value": "http://localhost:3000", "description": "Backend local en tu PC" },
     { "key": "id", "value": "1", "description": "Se actualiza automáticamente al crear un producto" }
   ],
   "item": [
@@ -18,17 +18,17 @@
       }
     },
     {
-      "name": "Estado de la API",
-      "request": {
-        "method": "GET",
-        "url": { "raw": "{{baseUrl}}/api/health", "host": ["{{baseUrl}}"], "path": ["api", "health"] }
-      }
-    },
-    {
       "name": "Listar productos",
       "request": {
         "method": "GET",
         "url": { "raw": "{{baseUrl}}/api/productos", "host": ["{{baseUrl}}"], "path": ["api", "productos"] }
+      }
+    },
+    {
+      "name": "Resumen de inventario",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/productos/resumen", "host": ["{{baseUrl}}"], "path": ["api", "productos", "resumen"] }
       }
     },
     {

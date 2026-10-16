@@ -12,10 +12,6 @@ app.get('/', (req, res) => {
     res.send('API backendUpb funcionando');
 });
 
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', message: 'API backendUpb funcionando' });
-});
-
 app.use('/api/productos', productoRoutes);
 
 // Ruta no encontrada

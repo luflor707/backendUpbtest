@@ -9,6 +9,8 @@ const validarId = (id) => {
 
 const listar = () => productoRepository.findAll();
 
+const obtenerResumen = () => productoRepository.getSummary();
+
 const obtenerPorId = async (id) => {
     const producto = await productoRepository.findById(validarId(id));
     if (!producto) throw new HttpError(404, 'Producto no encontrado');
@@ -32,4 +34,4 @@ const eliminar = async (id) => {
     if (!eliminado) throw new HttpError(404, 'Producto no encontrado');
 };
 
-module.exports = { listar, obtenerPorId, crear, actualizar, eliminar };
+module.exports = { listar, obtenerResumen, obtenerPorId, crear, actualizar, eliminar };

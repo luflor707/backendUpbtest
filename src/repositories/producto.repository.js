@@ -37,6 +37,37 @@ const findAll = async () => {
     return rows.map(Producto.fromRow);
 };
 
+const getSummary = async () => {
+    if (usarAlmacenamientoLocal) {
+        const productos = leerProductosLocales();
+        const unidadesEnStock = productos.reduce((total, producto) => total + Number(producto.stock), 0);
+        const valorInventario = productos.reduce(
+            (total, producto) => total + Number(producto.precio) * Number(producto.stock),
+            0
+        );
+
+        return {
+            totalProductos: productos.length,
+            unidadesEnStock,
+            valorInventario: Number(valorInventario.toFixed(2)),
+        };
+    }
+
+    const { rows } = await pool.query(
+        `SELECT COUNT(*) AS total_productos,
+                COALESCE(SUM(stock), 0) AS unidades_en_stock,
+                COALESCE(SUM(precio * stock), 0) AS valor_inventario
+         FROM productos`
+    );
+    const summary = rows[0];
+
+    return {
+        totalProductos: Number(summary.total_productos),
+        unidadesEnStock: Number(summary.unidades_en_stock),
+        valorInventario: Number(summary.valor_inventario),
+    };
+};
+
 const findById = async (id) => {
     if (usarAlmacenamientoLocal) {
         const producto = leerProductosLocales().find((row) => row.id === id);
@@ -99,4 +130,4 @@ const remove = async (id) => {
     return rowCount > 0;
 };
 
-module.exports = { findAll, findById, create, update, remove };
+module.exports = { findAll, getSummary, findById, create, update, remove };
