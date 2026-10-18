@@ -32,7 +32,11 @@ app.use((err, req, res, next) => {
 });
 
 const port = process.env.PORT || 3000;
+const host = process.env.HOST;
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+const onListening = () => {
+    console.log(`Server is running on http://${host || 'localhost'}:${port}`);
+};
+
+if (host) app.listen(port, host, onListening);
+else app.listen(port, onListening);
